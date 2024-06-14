@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="/imgs/logo.png" type="image/x-icon">
+
+    <title>Gestor de Tareas</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lobster&family=Varela+Round&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        header {
+            background: linear-gradient(to right,#18924b, #0c6631);
+            color: rgb(0, 0, 0);
+        }
+
+
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+        }
+
+        main {
+            flex: 1;
+        }
+
+        
+
+        .navbar-brand {
+            font-family: "Lobster", sans-serif;
+            font-weight: 400;
+            font-style: normal;
+            font-size: 50px;
+        }
+
+    
+        .navbar-collapse {
+            color: white;
+            justify-content: space-between
+        }
+
+        .text-center {
+            font-family: "Varela Round", sans-serif;
+           
+            font-size: 50px;
+            background: linear-gradient(to bottom, #18924b, #0a582b);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            -webkit-text-fill-color: transparent;
+        }
+
+
+        .card-body {
+            background-color: rgba(240, 248, 255, 0);
+            border-radius: 0%;
+            color: black;
+        }
+
+        .btn-group {
+            position: relative;
+
+        }
+
+        .card-title {
+            font-size: 30px;
+
+        }
+
+        .card-body {
+            font-size: 20px;
+        }
+
+        .completada .card,
+        .completada .card-title,
+        .completada .card-text .text-muted {
+            background-color: green;
+            color: white;
+        }
+
+        .vencida .card,
+        .vencida .card-title,
+        .vencida .card-text .text-muted {
+            background-color: red;
+            color: white;
+
+        }
+
+
+        .completada .card-text {
+            color: white;
+
+        }
+
+        .vencida .card-text {
+            color: white;
+
+        }
+
+        footer {
+            padding: 20px;
+            color: rgb(146, 146, 146);
+            background-color: #0a582b;
+            text-align: center;
+            font-family: "Varela Round", sans-serif;
+
+            font-style: normal;
+            width: 100%;
+            bottom: 0;
+            position: sticky;
+
+        }
+
+        .custom-button {
+            background-color: #18924b;
+            color: white;
+            border-color: #0a582b;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-dark">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="#">Gestor de Tareas</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse"
+                    data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                    aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav mr-auto">
+                        <li class="nav-item">
+                            <a class="nav-link active todas" aria-current="page" href="#">Todas</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link pendientes" href="#">Pendientes</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link completadas" href="#">Completadas</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link vencidas" href="#">Vencidas</a>
+                        </li>
+                    </ul>
+                    <form class="form-inline my-2 my-lg-0" id="form-buscar">
+                        <input class="form-control mr-sm-2" type="search" placeholder="Buscar Tareas"
+                            aria-label="Search" id="input-buscar">
+                        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="white"
+                                class="bi bi-search" viewBox="0 0 16 16">
+                                <path
+                                    d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0" />
+                            </svg>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <main class="container mt-5">
+        <h1 class="text-center"><b>Crea una nueva tarea...</b></h1>
+        <hr>
+        <form id="formulario-tareas">
+            <div class="form-row">
+                <div class="form-group col-md-3">
+                    <label for="nombreTarea">Nombre de la Tarea</label>
+                    <input type="text" class="form-control" id="nombreTarea" required>
+                </div>
+                <div class="form-group col-md-2">
+                    <label for="fechaInicio">Fecha de Inicio</label>
+                    <input type="date" class="form-control" id="fechaInicio" required>
+                </div>
+                <div class="form-group col-md-2">
+                    <label for="fechaFin">Fecha de Fin</label>
+                    <input type="date" class="form-control" id="fechaFin" required>
+                </div>
+                <div class="form-group col-md-3">
+                    <label for="responsable">Responsable</label>
+                    <input type="text" class="form-control" id="responsable" required>
+                </div>
+                <div class="form-group col-md-2 align-self-end">
+                    <button type="submit" class="btn btn-success">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                            class="bi bi-plus-circle-fill" viewBox="0 0 16 16">
+                            <path
+                                d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3z" />
+                        </svg> Agregar Tarea
+                    </button>
+                </div>
+            </div>
+        </form>
+
+        <ul id="lista-tareas" class="list-group mt-4"></ul>
+    </main>
+    <footer>© Universidad Tecnológica Metropolitana 2024 | YAOP</footer>
+
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const formularioTareas = document.getElementById("formulario-tareas");
+            const listaTareas = document.getElementById("lista-tareas");
+            const formBuscar = document.getElementById("form-buscar");
+            const inputBuscar = document.getElementById("input-buscar");
+
+            formularioTareas.addEventListener("submit", function (e) {
+                e.preventDefault();
+
+                const nombreTarea = document.getElementById("nombreTarea").value;
+                const fechaInicio = document.getElementById("fechaInicio").value;
+                const fechaFin = document.getElementById("fechaFin").value;
+                const responsable = document.getElementById("responsable").value;
+
+                if (new Date(fechaFin) < new Date(fechaInicio)) {
+
+                    Swal.fire({ // Ventanas de alerta tipo sweetalert2
+                        icon: "error",
+                        title: "Ha ocurrido un error...",
+                        text: "La fecha de fin no puede ser menor que la fecha de inicio.",
+                        customClass: {
+                            confirmButton: 'custom-button'
+                        }
+
+
+                    });
+                    return;
+                }
+
+                const tarea = {
+                    id: Date.now(),
+                    nombreTarea,
+                    fechaInicio,
+                    fechaFin,
+                    responsable,
+                    completada: false
+                };
+
+                agregarTareaALista(tarea);
+                guardarTarea(tarea);
+                Swal.fire({ // Ventanas de alerta tipo sweetalert2
+                    position: "center",
+                    icon: "success",
+                    title: "Tarea Creada",
+                    showConfirmButton: false,
+                    timer: 2000
+                });
+                formularioTareas.reset();
+            });
+
+            function agregarTareaALista(tarea) {
+                const li = document.createElement("li");
+                li.className = "list-group-item";
+
+                const fechaActual = new Date();
+                const fechaFinTarea = new Date(tarea.fechaFin);
+
+                if (tarea.completada) {
+                    li.classList.add("completada");
+                } else if (fechaFinTarea < fechaActual) {
+                    li.classList.add("vencida");
+                }
+
+                li.innerHTML = ` 
+                    <div class="card mb-3 shadow-sm">
+
+                        <div class="card-body">
+
+                            <h5 class="card-title mb-1">${tarea.nombreTarea}</h5>
+
+                            <p class="card-text" >
+                                <small class="card-text">Responsable: ${tarea.responsable}</small><br>
+                                <small class="card-text">Fecha de Inicio: ${tarea.fechaInicio}</small><br>
+                                <small class="card-text">Fecha de Fin: ${tarea.fechaFin}</small>
+                            </p>
+                            <div class="btn-group" role="group" aria-label="Task Actions">
+                                ${!tarea.completada && fechaFinTarea >= fechaActual ? `<button class="btn btn-success btn-sm completar-btn">Completar <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="currentColor" class="bi bi-check" viewBox="0 0 16 16">
+                                <path d="M10.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425z"/>
+                                </svg></button>` : ''}
+                                ${tarea.completada ? `<button class="btn btn-warning btn-sm incompleta-btn">Desmarcar <svg xmlns="http://www.w3.org/2000/svg" width="23" height="23" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
+                                <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
+                                </ svg></button>` : ''}
+                                <button class="btn btn-danger btn-sm borrar-btn">Borrar <svg
+                                        xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="currentColor"
+                                        class="bi bi-trash-fill" viewBox="0 0 16 16">
+                                        <path
+                                            d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5M8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5m3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0"/>
+                                    </svg></button>
+                            </div>
+                        </div>
+                    </div >
+                `;
+
+                listaTareas.appendChild(li);
+
+                // Agregar eventos a los botones
+                li.querySelector(".completar-btn")?.addEventListener("click", () => cambiarEstadoTarea(tarea.id, true));
+                li.querySelector(".incompleta-btn")?.addEventListener("click", () => cambiarEstadoTarea(tarea.id, false));
+                li.querySelector(".borrar-btn").addEventListener("click", () => borrarTarea(tarea.id));
+
+
+
+            }
+            //Aqui agregamos las funciones tipo CRUD
+            function guardarTarea(tarea) {
+                let tareas = JSON.parse(localStorage.getItem("tareas")) || [];
+                tareas.push(tarea);
+                localStorage.setItem("tareas", JSON.stringify(tareas));
+            }
+
+            function cargarTareas() {
+                let tareas = JSON.parse(localStorage.getItem("tareas")) || [];
+                tareas.forEach(tarea => agregarTareaALista(tarea));
+            }
+
+            function cambiarEstadoTarea(id, completada) {
+                let tareas = JSON.parse(localStorage.getItem("tareas")) || [];
+                tareas = tareas.map(tarea => tarea.id === id ? { ...tarea, completada } : tarea);
+                localStorage.setItem("tareas", JSON.stringify(tareas));
+                listaTareas.innerHTML = "";
+                cargarTareas();
+            }
+
+            function borrarTarea(id) {
+                let tareas = JSON.parse(localStorage.getItem("tareas")) || [];
+                tareas = tareas.filter(tarea => tarea.id !== id);
+                localStorage.setItem("tareas", JSON.stringify(tareas));
+                listaTareas.innerHTML = "";
+                cargarTareas();
+            }
+
+            // Función para filtrar tareas según el estado
+            function filtrarTareas(estado) {
+                const lis = listaTareas.querySelectorAll("li");
+
+                lis.forEach(li => {
+                    switch (estado) {
+                        case "todas":
+                            li.style.display = "block";
+                            break;
+                        case "pendientes":
+                            if (!li.classList.contains("completada") && !li.classList.contains("vencida")) {
+                                li.style.display = "block";
+                            } else {
+                                li.style.display = "none";
+                            }
+                            break;
+                        case "completadas":
+                            if (li.classList.contains("completada")) {
+                                li.style.display = "block";
+                            } else {
+                                li.style.display = "none";
+                            }
+                            break;
+                        case "vencidas":
+                            if (li.classList.contains("vencida")) {
+                                li.style.display = "block";
+                            } else {
+                                li.style.display = "none";
+                            }
+                            break;
+                        default:
+                            break;
+                    }
+                });
+            }
+
+            // Event listeners para los enlaces de filtrado
+            document.querySelectorAll(".nav-link").forEach(enlace => {
+                enlace.addEventListener("click", function (e) {
+                    e.preventDefault();
+                    const estado = this.classList.contains("todas") ? "todas" :
+                        this.classList.contains("pendientes") ? "pendientes" :
+                            this.classList.contains("completadas") ? "completadas" :
+                                this.classList.contains("vencidas") ? "vencidas" : "todas";
+                    filtrarTareas(estado);
+                });
+            });
+
+            // Event listener para el formulario de búsqueda
+            formBuscar.addEventListener("submit", function (e) {
+                e.preventDefault();
+                const textoBusqueda = inputBuscar.value.toLowerCase();
+                const lis = listaTareas.querySelectorAll("li");
+
+                lis.forEach(li => {
+                    const nombreTarea = li.querySelector(".card-title").textContent.toLowerCase();
+                    if (nombreTarea.includes(textoBusqueda)) {
+                        li.style.display = "block";
+                    } else {
+                        li.style.display = "none";
+                    }
+                });
+            });
+
+            // Cargar tareas al iniciar la página
+            cargarTareas();
+        });
+
+    </script>
+</body>
+
+</html>
