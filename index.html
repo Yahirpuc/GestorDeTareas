@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" href="./imgs/logo.png" type="image/x-icon">
+    <link rel="icon" href="/imgs/logo.png" type="image/x-icon">
 
     <title>Gestor de Tareas</title>
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
@@ -14,7 +14,7 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
         header {
-            background: linear-gradient(to right,#18924b, #0c6631);
+            background: linear-gradient(to right, #18924b, #0c6631);
             color: rgb(0, 0, 0);
         }
 
@@ -31,7 +31,7 @@
             flex: 1;
         }
 
-        
+
 
         .navbar-brand {
             font-family: "Lobster", sans-serif;
@@ -40,7 +40,7 @@
             font-size: 50px;
         }
 
-    
+
         .navbar-collapse {
             color: white;
             justify-content: space-between
@@ -48,7 +48,7 @@
 
         .text-center {
             font-family: "Varela Round", sans-serif;
-           
+
             font-size: 50px;
             background: linear-gradient(to bottom, #18924b, #0a582b);
             background-clip: text;
@@ -264,10 +264,13 @@
 
                 const fechaActual = new Date();
                 const fechaFinTarea = new Date(tarea.fechaFin);
+                // Truncar las fechas a solo días para evitar discrepancias de tiempo
+                fechaActual.setHours(0, 0, 0, 0);
+                fechaFinTarea.setHours(0, 0, 0, 0);
 
                 if (tarea.completada) {
                     li.classList.add("completada");
-                } else if (fechaFinTarea == fechaActual) {
+                } else if (fechaFinTarea < fechaActual) {
                     li.classList.add("vencida");
                 }
 
